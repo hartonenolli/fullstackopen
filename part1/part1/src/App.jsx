@@ -1,15 +1,21 @@
 const App = () => {
-  const now = new Date()
-  const a = 10
-  const b = 20
-  console.log(now, a+b)
-
+  const ika = 25;
+  const nimi = "Jaska";
   return (
     <div>
-      <p>Hello world, it is {now.toString()}</p>
-      <p>
-        {a} plus {b} is {a + b}
-      </p>
+      <h1>Greetings</h1>
+      <Hello name="Heikki" age={10+11}/>
+      <Hello name={nimi} age={ika}/>
+      <Hello name="Anni" age={33}/>
+    </div>
+  )
+}
+
+const Hello = (props) => {
+  console.log(props)
+  return (
+    <div>
+      <p>Hello {props.name}, you are {props.age} years old</p>
     </div>
   )
 }
