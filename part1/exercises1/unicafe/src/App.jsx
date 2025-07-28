@@ -14,21 +14,26 @@ const App = () => {
       <Button onClick={() => setNeutral(neutral + 1)} text="neutral" />
       <Button onClick={() => setBad(bad + 1)} text="bad" />
       <h1>Statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {good + neutral + bad}</p>
-      <Average good={good} neutral={neutral} bad={bad} />
-      <p>positive {good / (good+neutral+bad) *100}%</p>
+      <Statistics good={good} neutral={neutral} bad={bad} />
+
     </div>
   )
 }
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 
-const Average = ({ good, neutral, bad }) => {
+const Statistics = ({good, neutral, bad}) => {
   let points = good + neutral + bad
-  return <p>average {(good - bad) / points} </p>
+  return (
+    <div>
+      <p>good {good}</p>
+      <p>neutral {neutral}</p>
+      <p>bad {bad}</p>
+      <p>all {points}</p>
+      <p>average {(good - bad) / points}</p>
+      <p>positive {good / (points) *100}%</p>
+    </div>
+  )
 }
 
 export default App
