@@ -49,6 +49,7 @@ const Content = ({ parts }) => {
   return (
     <div>
       {parts.map(part => (<Part key={part.id} part={part} />))}
+      <Total parts={parts} />
     </div>
   )
 }
@@ -57,6 +58,18 @@ const Part = ({ part }) => {
   return (
     <p>
       {part.name} {part.exercises}
+    </p>
+  )
+}
+
+const Total = ({ parts }) => {
+  let total = 0
+  parts.map(part => {
+    total += part.exercises
+  })
+  return (
+    <p>
+      <strong>Total of {total} exercises</strong>
     </p>
   )
 }
