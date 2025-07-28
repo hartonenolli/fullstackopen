@@ -17,10 +17,18 @@ const App = () => {
       <p>good {good}</p>
       <p>neutral {neutral}</p>
       <p>bad {bad}</p>
+      <p>all {good + neutral + bad}</p>
+      <Average good={good} neutral={neutral} bad={bad} />
+      <p>positive {good / (good+neutral+bad) *100}%</p>
     </div>
   )
 }
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
+
+const Average = ({ good, neutral, bad }) => {
+  let points = good + neutral + bad
+  return <p>average {(good - bad) / points} </p>
+}
 
 export default App
