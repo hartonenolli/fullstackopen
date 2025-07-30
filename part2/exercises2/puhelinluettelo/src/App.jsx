@@ -8,6 +8,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filterBy, setFilter] = useState('')
   const [message, setMessage] = useState(null)
+  const [colorMessage, setColorMessage] = useState('green')
 
   useEffect(() => {
     PersonsService.getAll()
@@ -37,6 +38,7 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.map(p => p.id !== personToUpdate.id ? p : returnedPerson))
             setMessage(`Updated ${returnedPerson.name}`)
+            setColorMessage('green')
             setTimeout(() => {
               setMessage(null)
             }, 5000)
@@ -50,6 +52,7 @@ const App = () => {
             setPersons(persons.concat(returnedPerson))
           })
         setMessage(`Added ${newName}`)
+        setColorMessage('green')
         setTimeout(() => {
           setMessage(null)
         }, 5000)
@@ -78,6 +81,14 @@ const App = () => {
       ? PersonsService.deletePerson(person.id).then(() => {
           setPersons(persons.filter(p => p.id !== person.id))
           setMessage(`Deleted ${person.name}`)
+          setColorMessage('green')
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
+        .catch(error => {
+          setMessage(`Information of ${person.name} has already been removed from the server`)
+          setColorMessage('red')
           setTimeout(() => {
             setMessage(null)
           }, 5000)
@@ -91,7 +102,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} colorMessage={colorMessage} />
       <Filter filterBy={filterBy} handleFilterChange={handleFilterChange} />
       <h2>Add a new</h2>
       <PersonForm 
@@ -146,9 +157,9 @@ const Numbers = ({ persons, filterBy, handleDelete }) => {
   )
 }
 
-const Notification = ({ message }) => {
+const Notification = ({ message, colorMessage }) => {
   const style = {
-    color: 'green',
+    color: colorMessage,
     background: 'lightgrey',
     fontSize: 20,
     borderStyle: 'solid',
