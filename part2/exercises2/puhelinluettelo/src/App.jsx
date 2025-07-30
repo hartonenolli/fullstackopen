@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
+import PersonsService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -8,33 +9,31 @@ const App = () => {
   const [filterBy, setFilter] = useState('')
 
   useEffect(() => {
-    console.log('rendering app')
-    axios.get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        console.log('response', response.data)
-        setPersons(response.data)
+    PersonsService.getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
-
+      .catch(error => {
+        console.error('Error fetching persons:', error)
+      })
     }, [])
 
 
   const addName = (event) => {
     event.preventDefault()
-    console.log('button clicked', newName)
+    //console.log('button clicked', newName)
     const names = persons.map(person => person.name)
-    console.log('names', names);
+    //console.log('names', names);
     const personObject = {
       name: newName,
       number: newNumber
     }
     const nameExist = names.includes(newName)
       ? alert(`${newName} is already added to phonebook`)
-      : axios.post('http://localhost:3001/persons', personObject)
-          .then(response => {
-            console.log('response', response.data)
-            setPersons(persons.concat(response.data))
-          })
+      : PersonsService.addPerson(personObject).then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        console.log('added', returnedPerson)}
+          )
     setNewName('')
     setNewNumber('')
   }
