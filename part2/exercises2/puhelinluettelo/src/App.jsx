@@ -7,6 +7,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterBy, setFilter] = useState('')
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     PersonsService.getAll()
@@ -35,11 +36,23 @@ const App = () => {
         PersonsService.updatePerson(personToUpdate.id, personObject)
           .then(returnedPerson => {
             setPersons(persons.map(p => p.id !== personToUpdate.id ? p : returnedPerson))
-            console.log('updated', returnedPerson)
+            setMessage(`Updated ${returnedPerson.name}`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
           })
         } else {
             console.log(`Update of ${newName} cancelled`)
           }
+      } else {
+        PersonsService.addPerson(personObject)
+          .then(returnedPerson => {
+            setPersons(persons.concat(returnedPerson))
+          })
+        setMessage(`Added ${newName}`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       }
       setNewName('')
       setNewNumber('')
@@ -64,7 +77,10 @@ const App = () => {
     const confirmDelete = window.confirm(`Delete ${person.name}?`)
       ? PersonsService.deletePerson(person.id).then(() => {
           setPersons(persons.filter(p => p.id !== person.id))
-          console.log(`Deleted ${person.name}`)
+          setMessage(`Deleted ${person.name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
         })
       : console.log(`Deletion of ${person.name} cancelled`)
     setNewName('')
@@ -75,6 +91,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter filterBy={filterBy} handleFilterChange={handleFilterChange} />
       <h2>Add a new</h2>
       <PersonForm 
@@ -126,6 +143,24 @@ const Numbers = ({ persons, filterBy, handleDelete }) => {
         </li>
       )}
     </ul>
+  )
+}
+
+const Notification = ({ message }) => {
+  const style = {
+    color: 'green',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5
+  }
+  if (message === null) {
+    return null
+  }
+  return (
+    <div style={style}>
+      {message}
+    </div>
   )
 }
 
