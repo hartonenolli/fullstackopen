@@ -28,14 +28,21 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    const nameExist = names.includes(newName)
-      ? alert(`${newName} is already added to phonebook`)
-      : PersonsService.addPerson(personObject).then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-        console.log('added', returnedPerson)}
-          )
-    setNewName('')
-    setNewNumber('')
+    if (names.includes(newName)) {
+      const confirmUpdate = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+      if (confirmUpdate) {
+        const personToUpdate = persons.find(person => person.name === newName)
+        PersonsService.updatePerson(personToUpdate.id, personObject)
+          .then(returnedPerson => {
+            setPersons(persons.map(p => p.id !== personToUpdate.id ? p : returnedPerson))
+            console.log('updated', returnedPerson)
+          })
+        } else {
+            console.log(`Update of ${newName} cancelled`)
+          }
+      }
+      setNewName('')
+      setNewNumber('')
   }
 
   const handleNameChange = (event) => {
